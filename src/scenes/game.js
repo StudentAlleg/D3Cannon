@@ -5,8 +5,8 @@ class Game extends Phaser.Scene {
     }
 
     create() {
-        this.cannon = new Cannon(this, 0, camera.main.height)
-        this.onEnter()
+        this.cannon = new Cannon(this, 0, this.cameras.main.height);
+        this.onEnter();
     }
 
     onEnter() {
