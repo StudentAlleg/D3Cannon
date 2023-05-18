@@ -1,10 +1,9 @@
-class Test extends Game {
+class Test extends GameInterface {
     constructor() {
         super("test", "Test");
     }
     
-    onEnter(){
-
+    onEnter() {
     }
 }
 
@@ -17,5 +16,6 @@ const game = new Phaser.Game({
         height: 1080
     },
     scene: [Test],
+    backgroundColor: 0x000000,
     title: "Cannon Shooter",
 });
