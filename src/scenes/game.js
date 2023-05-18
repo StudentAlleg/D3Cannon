@@ -6,9 +6,10 @@ class GameInterface extends Phaser.Scene {
 
     create() {
         //first, lets make the cannon
-        this.cannon = this.newCannon(50, this.cameras.main.height - 50, 0xFFFFFF);
+        let color = 0xFFFFFF;
+        this.cannon = this.newCannon(50, this.cameras.main.height - 50, color);
 
-        
+        this.testButton = this.newButton(500, 500, "test", this.newBall(this.cannon, 50, color));
 
         //cannon
         this.onEnter();
@@ -17,17 +18,17 @@ class GameInterface extends Phaser.Scene {
 
     newCannon(x, y, color) {
         //first, lets make the cannon
-        cannon = this.add.container(x, y);
+        let cannon = this.add.container(x, y);
 
-        base = this.add.circle(0, 0, 100, color);
-        barrel.setName("base");
-        cannon.add(this.base);
+        let base = this.add.circle(0, 0, 100, color);
+        base.setName("base");
+        cannon.add(base);
 
-        barrel = this.add.rectangle(0, 0, 50, 300, color);
+        let barrel = this.add.rectangle(0, 0, 50, 300, color);
         barrel.setAngle(45);
         barrel.setName("barrel");
         
-        cannon.add(this.barrel);
+        cannon.add(barrel);
         return cannon;
     }
 
@@ -41,16 +42,18 @@ class GameInterface extends Phaser.Scene {
         //make a new ball at the end of the barrel
         //get the barrel, then change where the x,y is from
         let barrel = cannon.getByName("barrel");
-        barrel.setOrigin(1, 0.5);
+        //barrel.setOrigin(1, 0.5);
         
         //get the x, y of the barrel
-        let x = cannon.x + barrel.x;
-        let y = cannon.y + barrel.y;
+        //let x = cannon.x + barrel.x;
+        //let y = cannon.y + barrel.y;
         
-        barrel.setOrigin(0.5, 0.5);
+        let coords = barrel.getRightCenter(); //a Vector2 object
+
+        //barrel.setOrigin(0.5, 0.5);
 
 
-        let ball = this.add.circle(x, y, 25, color);
+        let ball = this.add.circle(coords.x, coords.y, 25, color);
         ball = this.physics.existing(ball);
         ball.body.allowGravity(true);
 
@@ -58,11 +61,28 @@ class GameInterface extends Phaser.Scene {
         let vX = Math.cos(rotation) * power;
         let vY = Math.sin(rotation) * power;
         ball.body.setVelocity(vX, vY);
+        
         return ball;
-
-
     }
 
+    newButton(x, y, text, fn) {
+        let button = this.add.container(x,y);
+        
+        let textObj = this.add.text(0, 0, text)
+            .setFontSize(24)
+            .setOrigin(0.5, 0.5);
+        
+        let background = this.add.rectangle(0, 0, textObj.width, textObj.height);
+           
+        
+        button.add(background);
+        button.add(textObj);
+
+        button.setInteractive();
+        button.on('pointerdown', fn());
+
+        return button;
+    }
 
 
     onEnter() {
