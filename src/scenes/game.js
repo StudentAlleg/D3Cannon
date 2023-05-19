@@ -12,6 +12,8 @@ class GameInterface extends Phaser.Scene {
         this.power = this.minimumPower;
         this.powerButton = false; //is the power button being pressed?
 
+        this.balls = [];
+
         this.score = 0;
         this.targets = this.add.group();
         
@@ -25,7 +27,7 @@ class GameInterface extends Phaser.Scene {
 
         let fireUp = () => {
             this.powerButton = false;
-            this.fireCannon(this.cannon, this.targets, this.power, 0x00FF00);
+            this.fireCannon(this.cannon, this.balls, this.power, 0x00FF00);
             this.power = this.minimumPower;
         };
 
@@ -36,8 +38,12 @@ class GameInterface extends Phaser.Scene {
         this.down = this.newButton(500, this.cameras.main.height - 50, "Down", 0x444444, increaseAngle);
         this.up = this.newButton(500, this.cameras.main.height - 125 - this.down.height, "Up", 0x444444, decreaseAngle);
         
-        this.testButton = this.newButton(700, this.cameras.main.height - 50, "Charge", 0xFF0000, fireDown, fireUp);
+        this.chargeButton = this.newButton(700, this.cameras.main.height - 50, "Charge", 0xFF0000, fireDown, fireUp);
 
+        this.scoreObj = this.add.text(this.cameras.main.width, 0, this.score)
+            .setOrigin(1, 0)
+            .setFontSize(48);
+        
         //cannon
         this.onEnter();
     }
@@ -64,7 +70,7 @@ class GameInterface extends Phaser.Scene {
         return ball;
     }
 
-    newBall(cannon, targets, power, color) {
+    newBall(cannon, balls, power, color) {
         //make a new ball at the end of the barrel
         //get the barrel, then change where the x,y is from
         let barrel = cannon.getByName("barrel");
@@ -88,14 +94,7 @@ class GameInterface extends Phaser.Scene {
         let vY = -Math.cos(rotation) * power;
         ball.body.setVelocity(vX, vY);
         
-        this.physics.collide(ball, targets, () => {
-            let target = this.physics.closest(ball);
-            target.destroy();
-            addedScore = (1/this.time.now) * 5000;
-            score += this.time.now;
-            console.log(score);
-            }
-        );
+        balls.push(ball);
         //console.log("new ball");
         return ball;
     }
@@ -146,6 +145,22 @@ class GameInterface extends Phaser.Scene {
         if (this.powerButton && (this.power < this.maximumPower)) {
             this.power += 20;
         }
+        //go through all currently active balls
+        for (let ball of this.balls)
+        {
+            this.physics.collide(ball, this.targets, () => {
+                let target = this.physics.closest(ball);
+                target.gameObject.destroy();
+                target.destroy();
+                ball.destroy();
+                let addedScore = (1/this.time.now) * 10000000;
+                this.score += addedScore;
+                this.scoreObj.setText(Math.floor(this.score));
+                console.log(this.score);
+                }
+            );
+        }
+        
     }
 
     onUpdate() {
