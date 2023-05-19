@@ -9,7 +9,8 @@ class GameInterface extends Phaser.Scene {
         let color = 0xFFFFFF;
         this.cannon = this.newCannon(50, this.cameras.main.height - 50, color);
 
-        this.testButton = this.newButton(500, 500, "test", this.newBall(this.cannon, 50, color));
+        let testBall = () => this.newBall(this.cannon, 1000, 0x00FF00);
+        this.testButton = this.newButton(500, 500, "test", 0xFF0000, testBall);
 
         //cannon
         this.onEnter();
@@ -47,39 +48,39 @@ class GameInterface extends Phaser.Scene {
         //get the x, y of the barrel
         //let x = cannon.x + barrel.x;
         //let y = cannon.y + barrel.y;
-        
-        let coords = barrel.getRightCenter(); //a Vector2 object
+        let coords = undefined;
+        coords = barrel.getTopCenter(coords, true); //a Vector2 object
 
         //barrel.setOrigin(0.5, 0.5);
 
 
         let ball = this.add.circle(coords.x, coords.y, 25, color);
-        ball = this.physics.existing(ball);
-        ball.body.allowGravity(true);
+        ball = this.physics.add.existing(ball);
+        //ball.body.allowGravity(true);
 
-        let rotation = barrel.rotation;
+        let rotation = -barrel.rotation;
         let vX = Math.cos(rotation) * power;
         let vY = Math.sin(rotation) * power;
         ball.body.setVelocity(vX, vY);
-        
+        console.log("new ball");
         return ball;
     }
 
-    newButton(x, y, text, fn) {
+    newButton(x, y, text, color, fn) {
         let button = this.add.container(x,y);
-        
+        let padding = 5;
         let textObj = this.add.text(0, 0, text)
-            .setFontSize(24)
-            .setOrigin(0.5, 0.5);
+            .setFontSize(48)
+            .setOrigin(0.5, 0.5)
+            .setInteractive()
+            .on('pointerdown', fn);
         
-        let background = this.add.rectangle(0, 0, textObj.width, textObj.height);
+        let background = this.add.rectangle(0, 0, textObj.width + padding, textObj.height + padding, color);
            
         
         button.add(background);
         button.add(textObj);
-
-        button.setInteractive();
-        button.on('pointerdown', fn());
+        
 
         return button;
     }
@@ -91,3 +92,5 @@ class GameInterface extends Phaser.Scene {
 
 
 }
+
+
