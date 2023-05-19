@@ -163,7 +163,7 @@ class GameInterface extends Phaser.Scene {
                 target.gameObject.destroy();
                 target.destroy();
                 ball.destroy();
-                let addedScore = (1/this.time.now) * 10000000;
+                let addedScore = (1/this.time.now) * 1000000000;
                 this.score += addedScore;
                 this.scoreObj.setText(Math.floor(this.score));
                 console.log(this.score);

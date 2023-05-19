@@ -13,7 +13,7 @@ class LevelEnd extends Phaser.Scene {
 
         this.centerX = this.cameras.main.width/2;
         this.centerY = this.cameras.main.height/2;
-        console.log(this.score);
+        //console.log(this.score);
         this.scoreObj = this.add.text(this.centerX, this.centerY, Math.floor(this.score))
             .setOrigin(0.5, 0.5)
             .setFontSize(72);
