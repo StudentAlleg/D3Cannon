@@ -5,7 +5,7 @@ class Level1 extends GameInterface {
     
     onUpdate() {
         if (this.targets.countActive() <= 0) {
-            this.gotoScene("level1end", {score : this.score});
+            this.gotoScene("level1end", { score: this.score });
         }
     }
 

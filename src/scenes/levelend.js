@@ -14,17 +14,20 @@ class LevelEnd extends Phaser.Scene {
         this.centerX = this.cameras.main.width/2;
         this.centerY = this.cameras.main.height/2;
         console.log(this.score);
-        this.scoreObj = this.newButton(this.centerX, this.centerY, Math.floor(this.score), 0xFF0000);
+        this.scoreObj = this.add.text(this.centerX, this.centerY, Math.floor(this.score))
+            .setOrigin(0.5, 0.5)
+            .setFontSize(72);
         this.onEnter();
     }
 
 
 
     newButton(x, y, text, color, downFn = undefined, upFn = undefined) { //from game.js
+        console.log(text);
         let button = this.add.container(x,y);
         let padding = 5;
         let textObj = this.add.text(0, 0, text)
-            .setFontSize(64)
+            .setFontSize(54)
             .setOrigin(0.5, 0.5)
             .setInteractive()
             
@@ -46,7 +49,7 @@ class LevelEnd extends Phaser.Scene {
 
     nextLevelButton(key, scoreObj) {
         let nextScene = () => this.gotoScene(key);
-        this.newButton(scoreObj.x, scoreObj.y + scoreObj.height * 2, "Next Level", 0x00FF00, nextScene);
+        this.newButton(scoreObj.x, scoreObj.y + scoreObj.height * 1, "Next Level", 0x00FF00, nextScene);
     }
 
     gotoScene(key) {
