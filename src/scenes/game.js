@@ -7,20 +7,21 @@ class GameInterface extends Phaser.Scene {
     create() {
         //first, lets make the cannon
         let color = 0xFFFFFF;
-        this.power = 0;
+        this.minimumPower = 500;
+        this.power = this.minimumPower;
         this.powerButton = false; //is the power button being pressed?
         
         this.cannon = this.newCannon(50, this.cameras.main.height - 50, color);
 
         let fireDown = () => {
-            while(this.input.activePointer.leftButtonDown()) {
-                this.power += 50
-                console.log
+            {
+                this.powerButton = true;
             } ;
         }
         let fireUp = () => {
+            this.powerButton = false;
             this.fireCannon(this.cannon, this.power, 0x00FF00);
-            this.power = 0;
+            this.power = this.minimumPower;
         }
 
 
@@ -103,8 +104,6 @@ class GameInterface extends Phaser.Scene {
         
         button.add(background);
         button.add(textObj);
-        
-
         return button;
     }
 
@@ -122,7 +121,9 @@ class GameInterface extends Phaser.Scene {
     }
 
     update() {
-
+        if (this.powerButton) {
+            this.power += 20;
+        }
     }
 
     onUpdate() {
