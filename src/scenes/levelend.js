@@ -10,11 +10,12 @@ class LevelEnd extends Phaser.Scene {
 
     create() {
         this.transitionDuration = 1500;
-        
+
         this.centerX = this.cameras.main.width/2;
         this.centerY = this.cameras.main.height/2;
-
-        this.scoreObj = this.newButton(centerX, centerY, 0xFF0000);
+        console.log(this.score);
+        this.scoreObj = this.newButton(this.centerX, this.centerY, Math.floor(this.score), 0xFF0000);
+        this.onEnter();
     }
 
 
@@ -42,6 +43,12 @@ class LevelEnd extends Phaser.Scene {
         button.add(textObj);
         return button;
     }
+
+    nextLevelButton(key, scoreObj) {
+        let nextScene = () => this.gotoScene(key);
+        this.newButton(scoreObj.x, scoreObj.y + scoreObj.height * 2, "Next Level", 0x00FF00, nextScene);
+    }
+
     gotoScene(key) {
         this.cameras.main.fade(this.transitionDuration, 0, 0, 0);
         this.time.delayedCall(this.transitionDuration, () => {

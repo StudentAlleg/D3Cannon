@@ -18,6 +18,7 @@ class GameInterface extends Phaser.Scene {
 
         this.score = 0;
         this.targets = this.add.group();
+
         
         this.cannon = this.newCannon(50, this.cameras.main.height - 50, color);
 
@@ -143,10 +144,10 @@ class GameInterface extends Phaser.Scene {
         barrel.setAngle(angle);
     }
 
-    gotoScene(key) {
+    gotoScene(key, data) {
         this.cameras.main.fade(this.transitionDuration, 0, 0, 0);
         this.time.delayedCall(this.transitionDuration, () => {
-            this.scene.start(key);
+            this.scene.start(key, data);
         });
     }
 
@@ -169,7 +170,7 @@ class GameInterface extends Phaser.Scene {
                 }
             );
         }
-        
+        this.onUpdate();
     }
 
     onUpdate() {
