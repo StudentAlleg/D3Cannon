@@ -7,15 +7,20 @@ class GameInterface extends Phaser.Scene {
     create() {
         //first, lets make the cannon
         let color = 0xFFFFFF;
+        this.power = 0;
+        
         this.cannon = this.newCannon(50, this.cameras.main.height - 50, color);
 
+
+
         let testBall = () => this.newBall(this.cannon, 1000, 0x00FF00);
-        this.testButton = this.newButton(500, 500, "test", 0xFF0000, testBall);
+        
+        
+        this.testButton = this.newButton(500, this.cameras.main.height - 50, "Charge", 0xFF0000, testBall);
 
         //cannon
         this.onEnter();
     }
-
 
     newCannon(x, y, color) {
         //first, lets make the cannon
@@ -85,6 +90,25 @@ class GameInterface extends Phaser.Scene {
         return button;
     }
 
+    increaseAngle(cannon) {
+        let barrel = cannon.getByName("barrel");
+        let angle = barrel.angle;
+        angle++;
+        if (angle >= 90) {
+            angle = 90;
+        }
+        barrel.setAngle(angle);
+    }
+
+    decreaseAngle(cannon) {
+        let barrel = cannon.getByName("barrel");
+        let angle = barrel.angle;
+        angle--;
+        if (angle <= 0) {
+            angle = 0;
+        }
+        barrel.setAngle(angle);
+    }
 
     onEnter() {
         //For consumer classes
