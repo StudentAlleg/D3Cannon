@@ -13,10 +13,14 @@ class GameInterface extends Phaser.Scene {
 
 
 
-        let testBall = () => this.newBall(this.cannon, 1000, 0x00FF00);
+        let testBall = () => this.newBall(this.cannon, 2000, 0x00FF00);
+        let increaseAngle = () => this.changeAngle(this.cannon, 1, 90, 0);
+        let decreaseAngle = () => this.changeAngle(this.cannon, -1, 90, 0)
+
+        this.down = this.newButton(500, this.cameras.main.height - 50, "Down", 0x444444, increaseAngle);
+        this.up = this.newButton(500, this.cameras.main.height - 125 - this.down.height, "Up", 0x444444, decreaseAngle);
         
-        
-        this.testButton = this.newButton(500, this.cameras.main.height - 50, "Charge", 0xFF0000, testBall);
+        this.testButton = this.newButton(700, this.cameras.main.height - 50, "Charge", 0xFF0000, testBall);
 
         //cannon
         this.onEnter();
@@ -63,9 +67,9 @@ class GameInterface extends Phaser.Scene {
         ball = this.physics.add.existing(ball);
         //ball.body.allowGravity(true);
 
-        let rotation = -barrel.rotation;
-        let vX = Math.cos(rotation) * power;
-        let vY = Math.sin(rotation) * power;
+        let rotation = barrel.rotation;
+        let vX = Math.sin(rotation) * power;
+        let vY = -Math.cos(rotation) * power;
         ball.body.setVelocity(vX, vY);
         console.log("new ball");
         return ball;
@@ -75,7 +79,7 @@ class GameInterface extends Phaser.Scene {
         let button = this.add.container(x,y);
         let padding = 5;
         let textObj = this.add.text(0, 0, text)
-            .setFontSize(48)
+            .setFontSize(56)
             .setOrigin(0.5, 0.5)
             .setInteractive()
             .on('pointerdown', fn);
@@ -90,22 +94,15 @@ class GameInterface extends Phaser.Scene {
         return button;
     }
 
-    increaseAngle(cannon) {
+    changeAngle(cannon, ammount, upperBounds, lowerBounds) {
         let barrel = cannon.getByName("barrel");
         let angle = barrel.angle;
-        angle++;
-        if (angle >= 90) {
-            angle = 90;
+        angle += ammount;
+        if (angle >= upperBounds) {
+            angle = upperBounds;
         }
-        barrel.setAngle(angle);
-    }
-
-    decreaseAngle(cannon) {
-        let barrel = cannon.getByName("barrel");
-        let angle = barrel.angle;
-        angle--;
-        if (angle <= 0) {
-            angle = 0;
+        if (angle <= lowerBounds) {
+            angle = lowerBounds;
         }
         barrel.setAngle(angle);
     }
