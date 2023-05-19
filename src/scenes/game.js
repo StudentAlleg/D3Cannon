@@ -5,24 +5,29 @@ class GameInterface extends Phaser.Scene {
     }
 
     create() {
-        //first, lets make the cannon
         let color = 0xFFFFFF;
         this.minimumPower = 500;
+        this.stepPower = 10;
+        this.maximumPower = 2000;
         this.power = this.minimumPower;
         this.powerButton = false; //is the power button being pressed?
+
+        this.score = 0;
+        this.targets = this.add.group();
         
         this.cannon = this.newCannon(50, this.cameras.main.height - 50, color);
 
         let fireDown = () => {
             {
                 this.powerButton = true;
-            } ;
-        }
+            }
+        };
+
         let fireUp = () => {
             this.powerButton = false;
-            this.fireCannon(this.cannon, this.power, 0x00FF00);
+            this.fireCannon(this.cannon, this.targets, this.power, 0x00FF00);
             this.power = this.minimumPower;
-        }
+        };
 
 
         let increaseAngle = () => this.changeAngle(this.cannon, 1, 90, 0);
@@ -53,13 +58,13 @@ class GameInterface extends Phaser.Scene {
         return cannon;
     }
 
-    fireCannon(cannon, power, color) {
-        let ball = this.newBall(cannon, power, color);
+    fireCannon(cannon, targets, power, color) {
+        let ball = this.newBall(cannon, targets, power, color);
         //do other cannon firing things
         return ball;
     }
 
-    newBall(cannon, power, color) {
+    newBall(cannon, targets, power, color) {
         //make a new ball at the end of the barrel
         //get the barrel, then change where the x,y is from
         let barrel = cannon.getByName("barrel");
@@ -82,7 +87,16 @@ class GameInterface extends Phaser.Scene {
         let vX = Math.sin(rotation) * power;
         let vY = -Math.cos(rotation) * power;
         ball.body.setVelocity(vX, vY);
-        console.log("new ball");
+        
+        this.physics.collide(ball, targets, () => {
+            let target = this.physics.closest(ball);
+            target.destroy();
+            addedScore = (1/this.time.now) * 5000;
+            score += this.time.now;
+            console.log(score);
+            }
+        );
+        //console.log("new ball");
         return ball;
     }
 
@@ -106,6 +120,14 @@ class GameInterface extends Phaser.Scene {
         button.add(textObj);
         return button;
     }
+    
+    newTarget(x, y, targetGroup, size, color) {
+        let target = this.add.circle(x, y, size, color);
+        target = this.physics.add.existing(target);
+        target.body.allowGravity = false;
+        targetGroup.add(target);
+        return target;
+    }
 
     changeAngle(cannon, ammount, upperBounds, lowerBounds) {
         let barrel = cannon.getByName("barrel");
@@ -121,7 +143,7 @@ class GameInterface extends Phaser.Scene {
     }
 
     update() {
-        if (this.powerButton) {
+        if (this.powerButton && (this.power < this.maximumPower)) {
             this.power += 20;
         }
     }
