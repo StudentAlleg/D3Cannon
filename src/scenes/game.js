@@ -5,6 +5,8 @@ class GameInterface extends Phaser.Scene {
     }
 
     create() {
+        this.transitionDuration = 1500;
+
         let color = 0xFFFFFF;
         this.minimumPower = 500;
         this.stepPower = 10;
@@ -139,6 +141,13 @@ class GameInterface extends Phaser.Scene {
             angle = lowerBounds;
         }
         barrel.setAngle(angle);
+    }
+
+    gotoScene(key) {
+        this.cameras.main.fade(this.transitionDuration, 0, 0, 0);
+        this.time.delayedCall(this.transitionDuration, () => {
+            this.scene.start(key);
+        });
     }
 
     update() {
