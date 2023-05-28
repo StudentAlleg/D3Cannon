@@ -166,7 +166,7 @@ class GameInterface extends Phaser.Scene {
                 let addedScore = (1/this.time.now) * 1000000000;
                 this.score += addedScore;
                 this.scoreObj.setText(Math.floor(this.score));
-                console.log(this.score);
+                //console.log(this.score);
                 }
             );
         }
