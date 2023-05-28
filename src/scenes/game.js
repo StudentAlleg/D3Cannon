@@ -41,7 +41,7 @@ class GameInterface extends Phaser.Scene {
         this.down = this.newButton(500, this.cameras.main.height - 50, "Down", 0x444444, increaseAngle);
         this.up = this.newButton(500, this.cameras.main.height - 125 - this.down.height, "Up", 0x444444, decreaseAngle);
         
-        this.chargeButton = this.newButton(700, this.cameras.main.height - 50, "Charge", 0xFF0000, fireDown, fireUp);
+        this.chargeButton = this.newButton(800, this.cameras.main.height - 50, "Charge", 0xFF0000, fireDown, fireUp);
 
         this.scoreObj = this.add.text(this.cameras.main.width, 0, this.score)
             .setOrigin(1, 0)
@@ -106,7 +106,7 @@ class GameInterface extends Phaser.Scene {
         let button = this.add.container(x,y);
         let padding = 5;
         let textObj = this.add.text(0, 0, text)
-            .setFontSize(56)
+            .setFontSize(72)
             .setOrigin(0.5, 0.5)
             .setInteractive()
             .on('pointerdown', downFn);
